@@ -23,4 +23,15 @@ public class UrlConstant {
      */
     public static final String GET_ATTENDANCE_DATA_URL = "https://oapi.dingtalk.com/topapi/attendance/getupdatedata";
 
+    /**
+     * 获取报表列定义url
+     */
+    public static final String GET_ATTENDANCE_COLUMNS_URL = "https://oapi.dingtalk.com/topapi/attendance/getattcolumns";
+
+    /**
+     * 获取报表列定义值url
+     */
+    public static final String GET_ATTENDANCE_COLUMNS_VALUE_URL = "https://oapi.dingtalk.com/topapi/attendance/getcolumnval";
+
+
 }

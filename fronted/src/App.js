@@ -1,32 +1,16 @@
 import './App.css';
 import axios from 'axios';
 import * as dd from 'dingtalk-jsapi';
+import List from "./List";
 
 //内网穿透工具介绍:
 // https://developers.dingtalk.com/document/resourcedownload/http-intranet-penetration?pnamespace=app
 // 替换成后端服务域名
-const domain = "http://wanzq.vaiwan.com";
+export const domain = "";
 function App() {
-    const attendanceReports = () => {
-        // 获取存储的用户ID
-        const userId = sessionStorage.getItem('userId');
-        // demo直接构建了要请求的数据，实际开发需要从页面获取
-        // 获取用户考勤统计信息
-        axios.get(domain + '/attendance/' + userId)
-            .then(response => {
-                alert(JSON.stringify(response.data))
-                // console.log(response)
-            })
-            .catch(error => {
-                alert(JSON.stringify(error))
-                // console.log(error.message)
-            })
-    };
     return (
         <div className="App">
-            <header className="App-header">
-                <button onClick={attendanceReports}>获取用户考勤统计信息</button>
-            </header>
+            <List />
         </div>
     );
 };
