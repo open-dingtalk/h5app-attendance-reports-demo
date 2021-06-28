@@ -76,7 +76,7 @@ class List extends React.Component {
     render() {
         return (<div>
             <button style={buttonStyle} onClick={this.getAttendanceReports}>获取用户考勤信息</button>
-            {/*<button style={buttonStyle} onClick={this.getAttendanceIntelligenceReports}>获取用户智能考勤统计信息</button>*/}
+            <button style={buttonStyle} onClick={this.getAttendanceIntelligenceReports}>获取用户智能考勤统计信息</button>
             <table>
                 <thead>
                 <tr>
