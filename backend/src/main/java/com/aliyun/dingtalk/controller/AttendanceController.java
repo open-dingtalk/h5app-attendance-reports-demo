@@ -1,15 +1,11 @@
 package com.aliyun.dingtalk.controller;
 
-import com.aliyun.dingtalk.model.RpcServiceResult;
+import com.aliyun.dingtalk.model.ServiceResult;
 import com.aliyun.dingtalk.service.AttendanceService;
-import com.aliyun.dingtalk.service.DingTalkUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Date;
 
 
 /**
@@ -29,9 +25,9 @@ public class AttendanceController {
      * @return
      */
     @GetMapping("/attendance")
-    public RpcServiceResult getAttendanceReportsByUserId(@RequestParam String userId, @RequestParam String workDate) {
+    public ServiceResult getAttendanceReportsByUserId(@RequestParam String userId, @RequestParam String workDate) {
 
-        return RpcServiceResult.getSuccessResult(attendanceService.getAttendanceReportsByUserId(userId, workDate));
+        return ServiceResult.getSuccessResult(attendanceService.getAttendanceReportsByUserId(userId, workDate));
 
     }
 
@@ -42,9 +38,9 @@ public class AttendanceController {
      * @return
      */
     @GetMapping("/attendance/intelligence")
-    public RpcServiceResult getAttendanceReports(@RequestParam String userId, @RequestParam String fromDate, @RequestParam String toDate) {
+    public ServiceResult getAttendanceReports(@RequestParam String userId, @RequestParam String fromDate, @RequestParam String toDate) {
 
-        return RpcServiceResult.getSuccessResult(attendanceService.getAttendanceReports(userId, fromDate, toDate));
+        return ServiceResult.getSuccessResult(attendanceService.getAttendanceReports(userId, fromDate, toDate));
 
     }
 }

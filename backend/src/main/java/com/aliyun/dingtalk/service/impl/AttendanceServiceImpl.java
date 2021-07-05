@@ -2,6 +2,7 @@ package com.aliyun.dingtalk.service.impl;
 
 import com.aliyun.dingtalk.config.AppConfig;
 import com.aliyun.dingtalk.constant.UrlConstant;
+import com.aliyun.dingtalk.exception.InvokeDingTalkException;
 import com.aliyun.dingtalk.model.AttendanceStatistics;
 import com.aliyun.dingtalk.service.AttendanceService;
 import com.aliyun.dingtalk.util.AccessTokenUtil;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -44,20 +44,20 @@ public class AttendanceServiceImpl implements AttendanceService {
         try {
             req.setWorkDate(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.parse(workDate));
             OapiAttendanceGetupdatedataResponse response = client.execute(req, AccessTokenUtil.getAccessToken(appConfig.getAppKey(), appConfig.getAppSecret()));
-            if (!Objects.isNull(response)) {
-                if (response.isSuccess()) {
-                    OapiAttendanceGetupdatedataResponse.AtCheckInfoForOpenVo result = response.getResult();
-                    return result;
-                } else {
-                    log.error("getAttendanceReportsByUserId fail, errCode: {}, errMsg: {}", response.getErrcode(), response.getErrmsg());
-                }
+            if (response.isSuccess()) {
+                OapiAttendanceGetupdatedataResponse.AtCheckInfoForOpenVo result = response.getResult();
+                return result;
             } else {
-                log.error("getAttendanceReportsByUserId error!");
+                throw new InvokeDingTalkException(response.getErrorCode(), response.getErrmsg());
             }
-        } catch (Exception e) {
+
+        } catch (ApiException e) {
             e.printStackTrace();
+            throw new InvokeDingTalkException(e.getErrCode(), e.getErrMsg());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new RuntimeException("date parse exception, pattern is " + DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT);
         }
-        return null;
     }
 
     /**
@@ -125,21 +125,17 @@ public class AttendanceServiceImpl implements AttendanceService {
         OapiAttendanceGetattcolumnsRequest req = new OapiAttendanceGetattcolumnsRequest();
         try {
             OapiAttendanceGetattcolumnsResponse rsp = client.execute(req, accessToken);
-            if (!Objects.isNull(rsp)) {
-                if (rsp.isSuccess()) {
-                    OapiAttendanceGetattcolumnsResponse.AttColumnsForTopVo result = rsp.getResult();
-                    List<OapiAttendanceGetattcolumnsResponse.ColumnForTopVo> columns = result.getColumns();
-                    return columns;
-                } else {
-                    log.error("getAttendanceColumns fail, errCode: {}, errMsg: {}", rsp.getErrcode(), rsp.getErrmsg());
-                }
+            if (rsp.isSuccess()) {
+                OapiAttendanceGetattcolumnsResponse.AttColumnsForTopVo result = rsp.getResult();
+                List<OapiAttendanceGetattcolumnsResponse.ColumnForTopVo> columns = result.getColumns();
+                return columns;
             } else {
-                log.error("getAttendanceColumns error!");
+                throw new InvokeDingTalkException(rsp.getErrorCode(), rsp.getErrmsg());
             }
         } catch (ApiException e) {
             e.printStackTrace();
+            throw new InvokeDingTalkException(e.getErrCode(), e.getErrMsg());
         }
-        return null;
     }
 
     /**
@@ -166,20 +162,17 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
         try {
             OapiAttendanceGetcolumnvalResponse rsp = client.execute(req, accessToken);
-            if (!Objects.isNull(rsp)) {
-                if (rsp.isSuccess()) {
-                    OapiAttendanceGetcolumnvalResponse.ColumnValListForTopVo result = rsp.getResult();
-                    List<OapiAttendanceGetcolumnvalResponse.ColumnValForTopVo> columnVals = result.getColumnVals();
-                    return columnVals;
-                } else {
-                    log.error("getAttendanceColumnsValue fail, errCode: {}, errMsg: {}", rsp.getErrcode(), rsp.getErrmsg());
-                }
+            if (rsp.isSuccess()) {
+                OapiAttendanceGetcolumnvalResponse.ColumnValListForTopVo result = rsp.getResult();
+                List<OapiAttendanceGetcolumnvalResponse.ColumnValForTopVo> columnVals = result.getColumnVals();
+                return columnVals;
             } else {
-                log.error("getAttendanceColumnsValue error!");
+                throw new InvokeDingTalkException(rsp.getErrorCode(), rsp.getErrmsg());
             }
         } catch (ApiException e) {
             e.printStackTrace();
+            throw new InvokeDingTalkException(e.getErrCode(), e.getErrMsg());
         }
-        return null;
+
     }
 }
