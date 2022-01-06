@@ -58,7 +58,7 @@ https://github.com/open-dingtalk/h5app-attendance-reports-demo.git
 ### 使用命令行安装依赖&打包
 
 ```txt
-cd fronted/
+cd frontend/
 ```
 
 ![image-20210705105306834](https://img.alicdn.com/imgextra/i1/O1CN014KH6rx1lO6yOHJUkP_!!6000000004808-2-tps-2624-630.png)
