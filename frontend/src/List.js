@@ -73,7 +73,7 @@ const columnList = [
     dataIndex: "columnVals",
     key: "columnVals",
     render: (columnVals) => {
-      columnVals.map((item) => {
+      return columnVals.map((item) => {
         return (
           <p>
             日期：{moment(item.date).format("YYYY-MM-DD HH:MM:SS")} --{" "}
@@ -116,12 +116,10 @@ class List extends React.Component {
           moment().format("YYYY-MM-DD")
       )
       .then((response) => {
-        alert(JSON.stringify(response))
         this.setState({
           ...this.state,
           ListItem: response.data.data,
         })
-        // console.log(response)
       })
       .catch((error) => {
         // alert(JSON.stringify(error))
@@ -170,10 +168,18 @@ class List extends React.Component {
           </Button>
         </p>
         {this.state.items?.length > 0 && (
-          <Table columns={columns} dataSource={this.state.items} />
+          <Table
+            columns={columns}
+            dataSource={this.state.items}
+            style={{ overflowX: "scroll" }}
+          />
         )}
         {this.state.ListItem?.length > 0 && (
-          <Table columns={columnList} dataSource={this.state.ListItem} />
+          <Table
+            columns={columnList}
+            dataSource={this.state.ListItem}
+            style={{ overflowX: "scroll" }}
+          />
         )}
         {/* <table>
           <thead>
