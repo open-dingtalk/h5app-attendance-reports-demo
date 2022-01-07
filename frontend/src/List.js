@@ -1,101 +1,196 @@
-import React from "react";
-import axios from "axios";
-import {domain} from "./App";
-import moment from "moment";
+import React from "react"
+import axios from "axios"
+import { Button, Table } from "antd"
+import { domain } from "./App"
+import moment from "moment"
 
-const buttonStyle = {height: '60px', margin: '10px', padding: '10px', fontsize: '18px'};
-const date7ago = moment().subtract(7,"days").format('YYYY-MM-DD');
-    class TrData extends React.Component {
-    constructor(props) {
-        super(props);
-
-    }
-
-    render() {
-        return (
-            this.props.items.map((item) => {
-                const checkType = item.checkType;
-                const userAddress = item.userAddress;
-                const userCheckTime = item.userCheckTime;
-                return (
-                    <tr>
-                        <td>{sessionStorage.userId}</td>
-                        <td>{checkType}</td>
-                        <td>{userAddress}</td>
-                        <td>{userCheckTime}</td>
-                    </tr>
-                )
-            })
-        )
-    }
+const buttonStyle = {
+  height: "60px",
+  margin: "10px",
+  padding: "10px",
+  fontsize: "18px",
 }
+const date7ago = moment().subtract(7, "days").format("YYYY-MM-DD")
+// class TrData extends React.Component {
+//   constructor(props) {
+//     super(props)
+//   }
+
+//   render() {
+//     return this.props.items.map((item) => {
+//       const checkType = item.checkType
+//       const userAddress = item.userAddress
+//       const userCheckTime = item.userCheckTime
+//       return (
+//         <tr>
+//           <td>{sessionStorage.userId}</td>
+//           <td>{checkType}</td>
+//           <td>{userAddress}</td>
+//           <td>{userCheckTime}</td>
+//         </tr>
+//       )
+//     })
+//   }
+// }
+
+const columns = [
+  {
+    title: "用户",
+    dataIndex: "userId",
+    key: "userId",
+    render: (text) => sessionStorage.userId,
+  },
+  {
+    title: "打卡类型",
+    dataIndex: "checkType",
+    key: "checkType",
+  },
+  {
+    title: "打卡地址",
+    dataIndex: "userAddress",
+    key: "userAddress",
+  },
+  {
+    title: "打卡时间",
+    dataIndex: "userCheckTime",
+    key: "userCheckTime",
+  },
+]
+const columnList = [
+  {
+    title: "id",
+    dataIndex: "id",
+    key: "id",
+  },
+  {
+    title: "名称",
+    dataIndex: "name",
+    key: "name",
+  },
+
+  {
+    title: "详细记录",
+    dataIndex: "columnVals",
+    key: "columnVals",
+    render: (columnVals) => {
+      columnVals.map((item) => {
+        return (
+          <p>
+            日期：{moment(item.date).format("YYYY-MM-DD HH:MM:SS")} --{" "}
+            {item.value}
+          </p>
+        )
+      })
+    },
+  },
+]
 
 class List extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            items: [],
-            isLoaded: false
-        };
-    };
-
-    getAttendanceIntelligenceReports = () => {
-        // 获取存储的用户ID
-        const userId = sessionStorage.getItem('userId');
-        // demo直接构建了要请求的数据，实际开发需要从页面获取
-
-        // 获取用户考勤智能统计信息
-        axios.get(domain + '/attendance/intelligence?userId=' + userId + '&fromDate=' + date7ago + '&toDate=' + moment().format("YYYY-MM-DD") )
-            .then(response => {
-                alert(JSON.stringify(response))
-                // console.log(response)
-            })
-            .catch(error => {
-                // alert(JSON.stringify(error))
-                console.log(error.message)
-            })
-    };
-
-    getAttendanceReports = () => {
-        // 获取存储的用户ID
-        const userId = sessionStorage.getItem('userId');
-        // demo直接构建了要请求的数据，实际开发需要从页面获取
-        // 获取用户考勤信息
-        axios.get(domain + '/attendance?userId=' + userId + '&workDate=' + date7ago)
-            .then(response => {
-                this.setState(
-                    {items: response.data.data.attendanceResultList, isLoaded: true}
-                )
-                // console.log(response)
-            })
-            .catch(error => {
-                alert(JSON.stringify(error))
-                // console.log(error.message)
-            })
-    };
-
-    render() {
-        return (<div>
-            <button style={buttonStyle} onClick={this.getAttendanceReports}>获取7天内用户考勤信息</button>
-            <button style={buttonStyle} onClick={this.getAttendanceIntelligenceReports}>获取用户智能考勤统计信息</button>
-            <table>
-                <thead>
-                <tr>
-                    <th>用户</th>
-                    <th>打卡类型</th>
-                    <th>打卡地址</th>
-                    <th>打卡时间</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                <TrData items={this.state.items}/>
-
-                </tbody>
-            </table>
-        </div>)
+  constructor(props) {
+    super(props)
+    this.state = {
+      items: [],
+      ListItem: [],
+      isLoaded: false,
     }
+  }
+
+  getAttendanceIntelligenceReports = () => {
+    // 获取存储的用户ID
+    const userId = sessionStorage.getItem("userId")
+    // demo直接构建了要请求的数据，实际开发需要从页面获取
+
+    this.setState({
+      ...this.state,
+      items: [],
+    })
+    // 获取用户考勤智能统计信息
+    axios
+      .get(
+        domain +
+          "/attendance/intelligence?userId=" +
+          userId +
+          "&fromDate=" +
+          date7ago +
+          "&toDate=" +
+          moment().format("YYYY-MM-DD")
+      )
+      .then((response) => {
+        alert(JSON.stringify(response))
+        this.setState({
+          ...this.state,
+          ListItem: response.data.data,
+        })
+        // console.log(response)
+      })
+      .catch((error) => {
+        // alert(JSON.stringify(error))
+        console.log(error.message)
+      })
+  }
+
+  getAttendanceReports = () => {
+    this.setState({
+      ...this.state,
+      ListItem: [],
+    })
+    // 获取存储的用户ID
+    const userId = sessionStorage.getItem("userId")
+    // demo直接构建了要请求的数据，实际开发需要从页面获取
+    // 获取用户考勤信息
+    axios
+      .get(domain + "/attendance?userId=" + userId + "&workDate=" + date7ago)
+      .then((response) => {
+        this.setState({
+          items: response.data.data.attendanceResultList,
+          isLoaded: true,
+        })
+        // console.log(response)
+      })
+      .catch((error) => {
+        alert(JSON.stringify(error))
+        // console.log(error.message)
+      })
+  }
+
+  render() {
+    return (
+      <div className="btn">
+        <p>
+          <Button onClick={this.getAttendanceReports} type="primary">
+            获取7天内用户考勤信息
+          </Button>
+        </p>
+        <p>
+          <Button
+            type="primary"
+            onClick={this.getAttendanceIntelligenceReports}
+          >
+            获取用户智能考勤统计信息
+          </Button>
+        </p>
+        {this.state.items?.length > 0 && (
+          <Table columns={columns} dataSource={this.state.items} />
+        )}
+        {this.state.ListItem?.length > 0 && (
+          <Table columns={columnList} dataSource={this.state.ListItem} />
+        )}
+        {/* <table>
+          <thead>
+            <tr>
+              <th>用户</th>
+              <th>打卡类型</th>
+              <th>打卡地址</th>
+              <th>打卡时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <TrData items={this.state.items} />
+          </tbody>
+        </table> */}
+      </div>
+    )
+  }
 }
 
-export default List;
+export default List
