@@ -1,10 +1,11 @@
 import React from "react";
 import axios from "axios";
 import {domain} from "./App";
+import moment from "moment";
 
 const buttonStyle = {height: '60px', margin: '10px', padding: '10px', fontsize: '18px'};
-
-class TrData extends React.Component {
+const date7ago = moment().subtract(7,"days").format('YYYY-MM-DD');
+    class TrData extends React.Component {
     constructor(props) {
         super(props);
 
@@ -43,11 +44,12 @@ class List extends React.Component {
         // 获取存储的用户ID
         const userId = sessionStorage.getItem('userId');
         // demo直接构建了要请求的数据，实际开发需要从页面获取
+
         // 获取用户考勤智能统计信息
-        axios.get(domain + '/attendance/intelligence?userId=' + userId + '&fromDate=2021-06-09&toDate=2021-06-25')
+        axios.get(domain + '/attendance/intelligence?userId=' + userId + '&fromDate=' + date7ago + '&toDate=' + moment().format("YYYY-MM-DD") )
             .then(response => {
-                // alert(JSON.stringify(response))
-                console.log(response)
+                alert(JSON.stringify(response))
+                // console.log(response)
             })
             .catch(error => {
                 // alert(JSON.stringify(error))
@@ -60,7 +62,7 @@ class List extends React.Component {
         const userId = sessionStorage.getItem('userId');
         // demo直接构建了要请求的数据，实际开发需要从页面获取
         // 获取用户考勤信息
-        axios.get(domain + '/attendance?userId=' + userId + '&workDate=2021-06-25')
+        axios.get(domain + '/attendance?userId=' + userId + '&workDate=' + date7ago)
             .then(response => {
                 this.setState(
                     {items: response.data.data.attendanceResultList, isLoaded: true}
@@ -75,7 +77,7 @@ class List extends React.Component {
 
     render() {
         return (<div>
-            <button style={buttonStyle} onClick={this.getAttendanceReports}>获取用户考勤信息</button>
+            <button style={buttonStyle} onClick={this.getAttendanceReports}>获取7天内用户考勤信息</button>
             <button style={buttonStyle} onClick={this.getAttendanceIntelligenceReports}>获取用户智能考勤统计信息</button>
             <table>
                 <thead>
