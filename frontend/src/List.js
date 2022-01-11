@@ -89,8 +89,8 @@ class List extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      items: [],
-      ListItem: [],
+      items: null,
+      ListItem: null,
       isLoaded: false,
     }
   }
@@ -102,7 +102,7 @@ class List extends React.Component {
 
     this.setState({
       ...this.state,
-      items: [],
+      items: null,
     })
     // 获取用户考勤智能统计信息
     axios
@@ -130,7 +130,7 @@ class List extends React.Component {
   getAttendanceReports = () => {
     this.setState({
       ...this.state,
-      ListItem: [],
+      ListItem: null,
     })
     // 获取存储的用户ID
     const userId = sessionStorage.getItem("userId")
@@ -139,8 +139,9 @@ class List extends React.Component {
     axios
       .get(domain + "/attendance?userId=" + userId + "&workDate=" + date7ago)
       .then((response) => {
+        // alert(response.data.data.attendanceResultList,'this.state.items')
         this.setState({
-          items: response.data.data.attendanceResultList,
+          items: response.data.data.attendanceResultList||[],
           isLoaded: true,
         })
         // console.log(response)
@@ -174,12 +175,19 @@ class List extends React.Component {
             style={{ overflowX: "scroll" }}
           />
         )}
+
+        {this.state.items?.length === 0 && (
+            <div>暂无7天内考勤信息，试试在钉钉考勤打卡吧</div>
+        )}
         {this.state.ListItem?.length > 0 && (
           <Table
             columns={columnList}
             dataSource={this.state.ListItem}
             style={{ overflowX: "scroll" }}
           />
+        )}
+        {this.state.ListItem?.length === 0 && (
+            <div>暂无智能考勤统计数据，试试在oa后台创建考勤报表吧</div>
         )}
         {/* <table>
           <thead>
